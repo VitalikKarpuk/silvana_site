@@ -1,0 +1,43 @@
+import type { Metadata } from "next";
+import { Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import "./globals.css";
+import { Nav } from "@/components/site/nav";
+import { Footer } from "@/components/site/footer";
+
+// Brand typeface — Whyte (provided in public/fonts). Body + headlines.
+const whyte = localFont({
+  variable: "--font-whyte",
+  display: "swap",
+  src: [
+    { path: "../public/fonts/Whyte-Regular.ttf", weight: "400", style: "normal" },
+    { path: "../public/fonts/Whyte-Medium.ttf", weight: "500", style: "normal" },
+    { path: "../public/fonts/Whyte-Bold.ttf", weight: "700", style: "normal" },
+  ],
+});
+// Geist Mono retained for data, code, tickers.
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Silvana — the agent interaction layer for tokenized assets",
+  description:
+    "Deploy agents that trade, settle, and prove on Canton. Private execution, atomic settlement, full asset control — from your first transaction to your millionth.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html
+      lang="en"
+      className={`${whyte.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">
+        <div className="ambient" aria-hidden />
+        <Nav />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </body>
+    </html>
+  );
+}

@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+/*
+  Silvana design tokens — dark "Apple glass" (glassmorphism).
+  Translucent frosted panels over an ambient magenta/teal-lit dark base.
+  magenta = CTA / live status · teal = data accents.
+*/
+:root {
+  --bg: #06060b; /* deep base so glass + glow read */
+  --surface: rgba(255, 255, 255, 0.05); /* glass fill */
+  --surface-2: rgba(255, 255, 255, 0.08); /* raised glass */
+  --fg: #f5f6f8;
+  --muted: #a1a1ad;
+  --line: rgba(255, 255, 255, 0.09); /* hairline on glass */
+  --accent: #d6448f; /* brand magenta — CTA / live */
+  --accent-hover: #c13a7f;
+  --data: #19c8b0; /* teal — data / code (a touch brighter for glass) */
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.055);
+  --glass-bg-strong: rgba(255, 255, 255, 0.09);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.16);
+  --glass-blur: 18px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 200ms;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-data: var(--data);
+
+  --font-sans: var(--font-whyte);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient light behind the glass — fixed, soft brand glows. */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 12% -5%, rgba(214, 68, 143, 0.22), transparent 70%),
+    /* soft teal on the LEFT (away from the hero video) so glass mid-page has
+       something colourful to refract */
+    radial-gradient(42% 42% at 6% 52%, rgba(25, 200, 176, 0.08), transparent 70%),
+    radial-gradient(46% 40% at 88% 78%, rgba(214, 68, 143, 0.1), transparent 70%),
+    radial-gradient(50% 50% at 50% 108%, rgba(214, 68, 143, 0.12), transparent 70%);
+}
+
+/* Apple-style glass surface: translucent fill, blur, edge highlight, soft shadow. */
+.glass {
+  /* top-lighter sheen over the translucent base — reads as a glass surface
+     catching light, not a flat panel */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.035)
+  );
+  backdrop-filter: blur(var(--glass-blur)) saturate(165%) brightness(1.04);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(165%) brightness(1.04);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    /* bright specular top edge */
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+    /* faint inner top glow */
+    inset 0 1px 14px 0 rgba(255, 255, 255, 0.05),
+    /* soft bottom seat */
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.22),
+    0 12px 36px -14px rgba(0, 0, 0, 0.6);
+}
+.glass-strong {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(175%) brightness(1.05);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(175%) brightness(1.05);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.36),
+    inset 0 1px 16px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25),
+    0 18px 52px -16px rgba(0, 0, 0, 0.7);
+}
+
+/* Headlines — Whyte Bold at -3% tracking, sentence case (HomePage.md spec). */
+.display {
+  font-family: var(--font-whyte), -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  font-weight: 700;
+}
+
+/* Tabular figures so data columns never shift. */
+.font-mono,
+[class*="font-mono"] {
+  font-variant-numeric: tabular-nums;
+}
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Logo-wall marquee: two identical halves scroll left; -50% loops seamlessly.
+   Pauses on hover/focus. Reduced-motion is handled by the global block below. */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee-x 22s linear infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Visible teal focus ring on interactive elements. */
+*:focus-visible {
+  outline: 2px solid var(--data);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
