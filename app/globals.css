@@ -1,31 +1,53 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: make `dark:` utilities respond to the .dark class
+   (toggled by the navbar) instead of the prefers-color-scheme media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
-  Silvana design tokens — dark "Apple glass" (glassmorphism).
-  Translucent frosted panels over an ambient magenta/teal-lit dark base.
-  magenta = CTA / live status · teal = data accents.
+  Silvana design tokens — LIGHT "Mercury-style" theme (variant 2).
+  Cool near-white page, white cards that softly lift off the background, navy
+  near-black typography, hairline borders, large radii and generous whitespace.
+  Brand accents kept: magenta = CTA / live status · teal = data / code.
+  (The `.glass` utilities are redefined here as soft white cards so existing
+  class usages convert automatically — no glassmorphism in this theme.)
 */
 :root {
-  --bg: #06060b; /* deep base so glass + glow read */
-  --surface: rgba(255, 255, 255, 0.05); /* glass fill */
-  --surface-2: rgba(255, 255, 255, 0.08); /* raised glass */
-  --fg: #f5f6f8;
-  --muted: #a1a1ad;
-  --line: rgba(255, 255, 255, 0.09); /* hairline on glass */
+  --bg: #f7f8fb; /* cool near-white page */
+  --surface: #ffffff; /* white cards lift off the page */
+  --surface-2: #eef1f6; /* subtle raised / inset tint */
+  --fg: #14161d; /* cool navy near-black */
+  --muted: #5b626f; /* cool gray */
+  --line: #e7eaf0; /* cool hairline border */
   --accent: #d6448f; /* brand magenta — CTA / live */
   --accent-hover: #c13a7f;
-  --data: #19c8b0; /* teal — data / code (a touch brighter for glass) */
+  --data: #0e8a76; /* teal — deeper for contrast on light */
 
-  /* Glass */
-  --glass-bg: rgba(255, 255, 255, 0.055);
-  --glass-bg-strong: rgba(255, 255, 255, 0.09);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-highlight: rgba(255, 255, 255, 0.16);
-  --glass-blur: 18px;
+  /* Card surfaces (kept under the old token names) */
+  --glass-bg: rgba(255, 255, 255, 0.72); /* translucent nav bar */
+  --glass-bg-strong: #ffffff;
+  --glass-border: var(--line);
 
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-micro: 200ms;
+}
+
+/* Dark theme — cool near-black surfaces (mirrors design/colors/palette.md).
+   Tokens are flipped here; every `bg-surface / text-fg / border-line …` usage
+   and the token-based product mockups adapt automatically. */
+.dark {
+  --bg: #0a0a0f;
+  --surface: #15151d;
+  --surface-2: #1e1e28;
+  --fg: #f5f5f7;
+  --muted: #9aa1af;
+  --line: #272730;
+  --accent: #e25aa3; /* brighter magenta for dark surfaces */
+  --accent-hover: #ee76b6;
+  --data: #19c8b0; /* brighter teal for dark surfaces */
+  --glass-bg: rgba(15, 15, 21, 0.72);
+  --glass-bg-strong: #15151d;
 }
 
 @theme inline {
@@ -52,65 +74,35 @@ body {
   color: var(--fg);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Ambient light behind the glass — fixed, soft brand glows. */
+/* No ambient glow layer in the light theme — keep the element inert. */
 .ambient {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(55% 45% at 12% -5%, rgba(214, 68, 143, 0.22), transparent 70%),
-    /* soft teal on the LEFT (away from the hero video) so glass mid-page has
-       something colourful to refract */
-    radial-gradient(42% 42% at 6% 52%, rgba(25, 200, 176, 0.08), transparent 70%),
-    radial-gradient(46% 40% at 88% 78%, rgba(214, 68, 143, 0.1), transparent 70%),
-    radial-gradient(50% 50% at 50% 108%, rgba(214, 68, 143, 0.12), transparent 70%);
+  display: none;
 }
 
-/* Apple-style glass surface: translucent fill, blur, edge highlight, soft shadow. */
+/* Flat light card (replaces the old glass surface). Subtle, Ramp-like. */
 .glass {
-  /* top-lighter sheen over the translucent base — reads as a glass surface
-     catching light, not a flat panel */
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.035)
-  );
-  backdrop-filter: blur(var(--glass-blur)) saturate(165%) brightness(1.04);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(165%) brightness(1.04);
-  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  border: 1px solid var(--line);
   box-shadow:
-    /* bright specular top edge */
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
-    /* faint inner top glow */
-    inset 0 1px 14px 0 rgba(255, 255, 255, 0.05),
-    /* soft bottom seat */
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.22),
-    0 12px 36px -14px rgba(0, 0, 0, 0.6);
+    0 1px 2px rgba(20, 22, 29, 0.04),
+    0 18px 40px -24px rgba(20, 22, 29, 0.16);
 }
 .glass-strong {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.14),
-    rgba(255, 255, 255, 0.05)
-  );
-  backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(175%) brightness(1.05);
-  -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(175%) brightness(1.05);
-  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  border: 1px solid var(--line);
   box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.36),
-    inset 0 1px 16px 0 rgba(255, 255, 255, 0.06),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25),
-    0 18px 52px -16px rgba(0, 0, 0, 0.7);
+    0 2px 4px rgba(20, 22, 29, 0.05),
+    0 30px 60px -30px rgba(20, 22, 29, 0.2);
 }
 
-/* Headlines — Whyte Bold at -3% tracking, sentence case (HomePage.md spec). */
+/* Headlines — Whyte Bold, tight tracking, sentence case. */
 .display {
   font-family: var(--font-whyte), -apple-system, BlinkMacSystemFont, sans-serif;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
   font-weight: 700;
 }
 
@@ -124,8 +116,39 @@ body {
   font-feature-settings: "tnum";
 }
 
-/* Logo-wall marquee: two identical halves scroll left; -50% loops seamlessly.
-   Pauses on hover/focus. Reduced-motion is handled by the global block below. */
+/* Hero tree reveal — wipes the diagram into view from the bottom edge upward,
+   so the tree appears to grow (ecosystems → trunk → agent branches). CSS-driven
+   so it always runs; reduced-motion (below) snaps it to the final frame. */
+@keyframes grow-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+/* After the tree grows in, it gently breathes — a subtle scale + opacity pulse.
+   (The diagram is a flat image, so this is the most legible "pulse" for it.) */
+@keyframes tree-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.88;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+.tree-grow {
+  /* quicker pickup at the start, still accelerating to a fast finish; then a
+     slow, looping pulse of the branches that begins once the grow-in ends. */
+  animation:
+    grow-up 1.55s cubic-bezier(0.3, 0, 0.7, 0) 0.15s both,
+    tree-pulse 2.4s ease-in-out 1.7s infinite;
+}
+
+/* Logo-wall marquee: two identical halves scroll left; -50% loops seamlessly. */
 @keyframes marquee-x {
   from {
     transform: translateX(0);
@@ -143,9 +166,40 @@ body {
   animation-play-state: paused;
 }
 
-/* Visible teal focus ring on interactive elements. */
+/* ---- Product bento mock animations -------------------------------------
+   Decorative motion inside the light product mini-mockups. All CSS-driven so
+   the reduced-motion rule below freezes them automatically. */
+@keyframes mock-bar {
+  0%, 100% { transform: scaleX(0.6); }
+  50%      { transform: scaleX(1); }
+}
+@keyframes mock-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+@keyframes mock-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes mock-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+@keyframes mock-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.8); }
+}
+/* a settlement toast that slides in, lingers, then leaves — loops */
+@keyframes mock-toast {
+  0%       { opacity: 0; transform: translateY(10px); }
+  8%       { opacity: 1; transform: translateY(0); }
+  72%      { opacity: 1; transform: translateY(0); }
+  82%, 100% { opacity: 0; transform: translateY(-6px); }
+}
+
+/* Visible focus ring on interactive elements. */
 *:focus-visible {
-  outline: 2px solid var(--data);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
 }

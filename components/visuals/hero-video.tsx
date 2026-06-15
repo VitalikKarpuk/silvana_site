@@ -85,7 +85,7 @@ export function HeroVideo({
       >
       <video
         ref={ref}
-        src="/heroVideo.mp4"
+        src="/silvana_tree.mp4"
         autoPlay
         muted
         playsInline
@@ -103,18 +103,10 @@ export function HeroVideo({
         }}
       />
 
-      {/* once ended: dim the held frame, then sweep a faint light bar across it */}
+      {/* once ended: keep the held frame at full brightness (no dimming) and
+          just pulse the right-hand output nodes so it stays alive */}
       {ended && !reduce && (
         <>
-          {/* gentle dim, fades in */}
-          <motion.div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{ background: "var(--bg)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-          />
           {/* pulse the right-hand output nodes so the held frame stays alive */}
           {RIGHT_NODES.map((n, i) => (
             <motion.div

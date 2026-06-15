@@ -1,28 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { NAV_GROUPS, NAV_STANDALONE } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/logo";
 
-// Near-opaque dark "vibrancy" surface for floating menus. Set inline (not via a
+// Near-opaque light "paper" surface for floating menus. Set inline (not via a
 // utility/custom class) so it always paints — page content behind stays fully
 // obscured and menu items read clearly over any background.
 const MENU_SURFACE: React.CSSProperties = {
-  background: "linear-gradient(180deg, rgba(20,20,30,0.98), rgba(11,11,18,0.985))",
-  backdropFilter: "blur(24px) saturate(160%)",
-  WebkitBackdropFilter: "blur(24px) saturate(160%)",
-  boxShadow: "0 22px 56px -16px rgba(0,0,0,0.85)",
+  background: "rgba(255,255,255,0.98)",
+  backdropFilter: "blur(24px) saturate(140%)",
+  WebkitBackdropFilter: "blur(24px) saturate(140%)",
+  boxShadow: "0 22px 56px -20px rgba(23,21,15,0.22)",
 };
 
 export function Nav() {
   const [open, setOpen] = useState<string | null>(null);
   const [mobile, setMobile] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-[var(--glass-bg)] backdrop-blur-xl backdrop-saturate-150">
+    <header
+      className={`sticky top-0 z-50 border-b border-line bg-[var(--glass-bg)] backdrop-blur-xl backdrop-saturate-150 transition-shadow duration-300 ${
+        scrolled ? "shadow-[0_10px_30px_-18px_rgba(20,22,29,0.35)]" : ""
+      }`}
+    >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center text-fg" aria-label="Silvana home">
@@ -66,7 +80,7 @@ export function Nav() {
                   >
                     <div
                       className="overflow-hidden rounded-2xl p-2"
-                      style={{ ...MENU_SURFACE, border: "1px solid rgba(255,255,255,0.1)" }}
+                      style={{ ...MENU_SURFACE, border: "1px solid var(--line)" }}
                     >
                       {g.items.map((it) => (
                         <Link
@@ -103,7 +117,8 @@ export function Nav() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle />
           <Button href="/app" variant="primary" className="hidden sm:inline-flex">
             Open the app
           </Button>
@@ -117,6 +132,13 @@ export function Nav() {
         </div>
       </nav>
 
+      {/* reading progress */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-accent"
+        style={{ scaleX: progress }}
+      />
+
       {/* Mobile menu */}
       <AnimatePresence>
         {mobile && (
@@ -124,7 +146,7 @@ export function Nav() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            style={{ ...MENU_SURFACE, borderTop: "1px solid rgba(255,255,255,0.1)" }}
+            style={{ ...MENU_SURFACE, borderTop: "1px solid var(--line)" }}
             className="overflow-hidden lg:hidden"
           >
             <div className="space-y-4 px-6 py-6">
@@ -165,6 +187,43 @@ export function Nav() {
         )}
       </AnimatePresence>
     </header>
+  );
+}
+
+function ThemeToggle() {
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  const toggle = () => {
+    const next = !document.documentElement.classList.contains("dark");
+    document.documentElement.classList.toggle("dark", next);
+    try {
+      localStorage.setItem("theme", next ? "dark" : "light");
+    } catch {}
+    setDark(next);
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+      className="flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-2 hover:text-fg"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        {dark ? (
+          <>
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" />
+          </>
+        ) : (
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+        )}
+      </svg>
+    </button>
   );
 }
 
