@@ -1,3 +1,25 @@
+// Just the two-leaf mark — no wordmark.
+export function LogoMark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 45 44"
+      className={className}
+      fill="none"
+      role="img"
+      aria-label="Silvana mark"
+    >
+      <path
+        d="M16.5989 28.156C14.9522 29.6877 12.7383 30.5418 10.5308 30.1121C8.54576 29.7257 6.61337 29.1098 4.74981 28.2678C3.95174 27.907 3.16171 27.5019 2.40253 27.0619C-0.69279 25.2707 -0.701772 21.0773 1.82682 18.5483L14.7488 5.62448C15.4086 4.96452 16.3037 4.59375 17.2369 4.59375H38.6204C39.6653 4.59375 40.1886 5.85707 39.4498 6.59592C35.5144 10.5312 22.2451 22.9042 16.5989 28.156Z"
+        fill="var(--accent)"
+      />
+      <path
+        d="M5.17513 41.9977L28.0148 20.4832C29.6677 18.9262 31.9031 18.0531 34.1314 18.4901C36.1036 18.8769 38.0238 19.4904 39.8759 20.3273C40.674 20.6881 41.464 21.0931 42.2232 21.5331C45.3184 23.3243 45.3273 27.5177 42.7986 30.0464L29.8756 42.9694C29.2157 43.6293 28.3208 44 27.3876 44H6.00437C4.95941 44 4.43616 42.7365 5.17513 41.9977Z"
+        fill="var(--accent)"
+      />
+    </svg>
+  );
+}
+
 // Official Silvana logo. The mark (two leaves — the woodland motif) uses the
 // brand magenta; the wordmark uses currentColor so it adapts to the dark theme
 // (the source SVG ships it in near-black #101720, invisible on our bg).

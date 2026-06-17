@@ -7,14 +7,14 @@ import { NAV_GROUPS, NAV_STANDALONE } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/logo";
 
-// Near-opaque light "paper" surface for floating menus. Set inline (not via a
-// utility/custom class) so it always paints — page content behind stays fully
-// obscured and menu items read clearly over any background.
+// Near-opaque "paper" surface for floating menus. Uses the theme surface token
+// so it adapts to light/dark (white paper in light, near-black in dark); set
+// inline so it always paints and fully obscures the page content behind it.
 const MENU_SURFACE: React.CSSProperties = {
-  background: "rgba(255,255,255,0.98)",
+  background: "color-mix(in srgb, var(--surface) 98%, transparent)",
   backdropFilter: "blur(24px) saturate(140%)",
   WebkitBackdropFilter: "blur(24px) saturate(140%)",
-  boxShadow: "0 22px 56px -20px rgba(23,21,15,0.22)",
+  boxShadow: "0 22px 56px -20px rgba(0,0,0,0.32)",
 };
 
 export function Nav() {
@@ -37,14 +37,15 @@ export function Nav() {
         scrolled ? "shadow-[0_10px_30px_-18px_rgba(20,22,29,0.35)]" : ""
       }`}
     >
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center text-fg" aria-label="Silvana home">
           <Logo className="h-6 w-auto" />
         </Link>
 
-        {/* Desktop links */}
-        <div className="hidden items-center gap-1 lg:flex">
+        {/* Desktop links — absolutely centered in the bar, independent of the
+            logo / actions widths on either side */}
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 whitespace-nowrap lg:flex">
           {NAV_GROUPS.map((g) => (
             <div
               key={g.label}
@@ -86,20 +87,27 @@ export function Nav() {
                         <Link
                           key={it.href + it.label}
                           href={it.href}
-                          className="block rounded-lg px-3 py-2.5 transition-colors hover:bg-surface-2"
+                          className="group/item flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-surface-2"
                         >
-                          <div className="text-sm font-medium text-fg">{it.label}</div>
-                          {it.desc && (
-                            <div className="mt-0.5 text-xs text-muted">{it.desc}</div>
-                          )}
+                          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-surface-2 text-accent transition-colors group-hover/item:border-accent/30">
+                            <NavIcon name={it.icon} />
+                          </span>
+                          <span className="min-w-0">
+                            <span className="block text-sm font-medium text-fg">{it.label}</span>
+                            {it.desc && (
+                              <span className="mt-0.5 block text-xs text-muted">{it.desc}</span>
+                            )}
+                          </span>
                         </Link>
                       ))}
-                      <Link
-                        href={g.featured.href}
-                        className="mt-1 block border-t border-line px-3 py-2.5 text-sm font-medium text-data hover:text-fg"
-                      >
-                        {g.featured.label} →
-                      </Link>
+                      {g.featured && (
+                        <Link
+                          href={g.featured.href}
+                          className="mt-1 block border-t border-line px-3 py-2.5 text-sm font-medium text-data hover:text-fg"
+                        >
+                          {g.featured.label} →
+                        </Link>
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -159,9 +167,12 @@ export function Nav() {
                     <Link
                       key={it.href + it.label}
                       href={it.href}
-                      className="block py-1.5 text-sm text-fg"
+                      className="flex items-center gap-2.5 py-1.5 text-sm text-fg"
                       onClick={() => setMobile(false)}
                     >
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-line bg-surface-2 text-accent">
+                        <NavIcon name={it.icon} />
+                      </span>
                       {it.label}
                     </Link>
                   ))}
@@ -225,6 +236,52 @@ function ThemeToggle() {
       </svg>
     </button>
   );
+}
+
+// Submenu icons — one per nav item, meaning-matched. Geometry follows the
+// Lucide grid (24px box, 1.75 stroke, round caps/joins) so each glyph stays
+// crisp and balanced at the 16px render size. Color inherits via currentColor.
+function NavIcon({ name }: { name?: string }) {
+  const p = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.75,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    className: "h-4 w-4",
+    "aria-hidden": true,
+  };
+  switch (name) {
+    case "book": // Silvana Book — open book
+      return <svg {...p}><path d="M2 4h6a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H2z" /><path d="M22 4h-6a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H22z" /></svg>;
+    case "api": // Agentic API — gRPC braces
+      return <svg {...p}><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1" /><path d="M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1" /></svg>;
+    case "sdk": // SDK — package
+      return <svg {...p}><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" /><path d="m7.5 4.3 9 5.1" /></svg>;
+    case "agent": // autonomous bot
+      return <svg {...p}><path d="M12 8V4H8" /><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M2 14h2M20 14h2M9 13v2M15 13v2" /></svg>;
+    case "catalog": // grid of agents
+      return <svg {...p}><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>;
+    case "play": // use cases in action — play circle
+      return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="M10 8.5v7l5.5-3.5z" /></svg>;
+    case "playground": // sliders / controls
+      return <svg {...p}><path d="M4 6h7M15 6h5M4 12h3M11 12h9M4 18h9M17 18h3" /><path d="M13 4v4M9 10v4M15 16v4" /></svg>;
+    case "guide": // SDK guide — graduation cap
+      return <svg {...p}><path d="M21.4 10.1 12.4 6a1 1 0 0 0-.8 0L2.6 10.1a.5.5 0 0 0 0 .92l9 4.05a1 1 0 0 0 .8 0l9-4.05a.5.5 0 0 0 0-.92Z" /><path d="M22 10.5V16" /><path d="M6 12.5V16c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-3.5" /></svg>;
+    case "code": // api reference — </>
+      return <svg {...p}><path d="m16 18 6-6-6-6M8 6l-6 6 6 6" /></svg>;
+    case "layers": // hosting models — stacked
+      return <svg {...p}><path d="M12.4 2.5a1 1 0 0 0-.8 0l-8.6 3.9a.5.5 0 0 0 0 .9l8.6 3.9a1 1 0 0 0 .8 0l8.6-3.9a.5.5 0 0 0 0-.9z" /><path d="m3 12 8.6 3.9a1 1 0 0 0 .8 0L21 12" /><path d="m3 17 8.6 3.9a1 1 0 0 0 .8 0L21 17" /></svg>;
+    case "sparkles": // use cases — possibilities
+      return <svg {...p}><path d="M11.5 3.5 13 8.2a2 2 0 0 0 1.3 1.3l4.7 1.5-4.7 1.5A2 2 0 0 0 13 13.8l-1.5 4.7-1.5-4.7a2 2 0 0 0-1.3-1.3L4 11l4.7-1.5A2 2 0 0 0 10 8.2z" /><path d="M19 4v3M20.5 5.5h-3" /></svg>;
+    case "users": // who can use
+      return <svg {...p}><path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20" /><circle cx="9.5" cy="7" r="3.5" /><path d="M16 3.8a3.5 3.5 0 0 1 0 6.7M21 20v-1.5a4 4 0 0 0-3-3.85" /></svg>;
+    case "chart": // case studies — results
+      return <svg {...p}><path d="M4 4v15a1 1 0 0 0 1 1h15" /><path d="M8 16v-3M13 16V9M18 16v-5" /></svg>;
+    default:
+      return <svg {...p}><circle cx="12" cy="12" r="8" /><path d="M12 8v4l2.5 2.5" /></svg>;
+  }
 }
 
 function Chevron() {

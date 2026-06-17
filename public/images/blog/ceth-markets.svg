@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <defs>
+    <filter id="b" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="90"/>
+    </filter>
+    <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="#08090a"/>
+  <g filter="url(#b)" opacity="0.55">
+    <circle cx="760" cy="220" r="260" fill="#14b8a6"/>
+    <circle cx="360" cy="160" r="230" fill="#5e6ad2"/>
+  </g>
+  <rect x="0.5" y="0.5" width="1199" height="120" fill="url(#hair)"/>
+  <g transform="translate(64,556)">
+    <g transform="scale(0.62)">
+      <path d="M16.5989 28.156C14.9522 29.6877 12.7383 30.5418 10.5308 30.1121C8.54576 29.7257 6.61337 29.1098 4.74981 28.2678C3.95174 27.907 3.16171 27.5019 2.40253 27.0619C-0.69279 25.2707 -0.701772 21.0773 1.82682 18.5483L14.7488 5.62448C15.4086 4.96452 16.3037 4.59375 17.2369 4.59375H38.6204C39.6653 4.59375 40.1886 5.85707 39.4498 6.59592C35.5144 10.5312 22.2451 22.9042 16.5989 28.156Z" fill="#d6448f"/>
+      <path d="M5.17513 41.9977L28.0148 20.4832C29.6677 18.9262 31.9031 18.0531 34.1314 18.4901C36.1036 18.8769 38.0238 19.4904 39.8759 20.3273C40.674 20.6881 41.464 21.0931 42.2232 21.5331C45.3184 23.3243 45.3273 27.5177 42.7986 30.0464L29.8756 42.9694C29.2157 43.6293 28.3208 44 27.3876 44H6.00437C4.95941 44 4.43616 42.7365 5.17513 41.9977Z" fill="#d6448f"/>
+    </g>
+    <text x="42" y="22" font-size="24" fill="#c9cdd3" font-family="Inter, system-ui, sans-serif">Silvana</text>
+  </g>
+</svg>

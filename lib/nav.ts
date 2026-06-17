@@ -1,12 +1,12 @@
 // Navigation model — mirrors content/GlobalNotes.md and Sitemap.md.
 
-export type NavLink = { label: string; href: string; desc?: string };
+export type NavLink = { label: string; href: string; desc?: string; icon?: string };
 
 export type NavGroup = {
   label: string;
   href: string;
   items: NavLink[];
-  featured: NavLink;
+  featured?: NavLink;
 };
 
 export const NAV_GROUPS: NavGroup[] = [
@@ -14,42 +14,38 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Products",
     href: "/products",
     items: [
-      { label: "Silvana Book", href: "/products/silvana-book", desc: "The private orderbook on Canton." },
-      { label: "Agentic API", href: "/products/agentic-api", desc: "One gRPC interface for everything on Canton." },
-      { label: "SDK", href: "/products/sdk", desc: "Turn a strategy into an agent." },
+      { label: "Silvana Book", href: "/products/silvana-book", desc: "The private orderbook on Canton.", icon: "book" },
+      { label: "Agentic API", href: "/products/agentic-api", desc: "One gRPC interface for everything on Canton.", icon: "api" },
+      { label: "SDK", href: "/products/sdk", desc: "Turn a strategy into an agent.", icon: "sdk" },
     ],
-    featured: { label: "Compare all products", href: "/products" },
   },
   {
     label: "Agents",
     href: "/agents",
     items: [
-      { label: "How agents work", href: "/agents", desc: "Trade, settle, and prove — autonomously." },
-      { label: "Agent catalog", href: "/agents/catalog", desc: "An agent for every job on the book." },
-      { label: "Use cases in action", href: "/agents/use-cases", desc: "Step through live agent workflows." },
-      { label: "Playground", href: "/agents/playground", desc: "Drive an agent before you deploy one." },
+      { label: "How agents work", href: "/agents", desc: "Trade, settle, and prove — autonomously.", icon: "agent" },
+      { label: "Agent catalog", href: "/agents/catalog", desc: "An agent for every job on the book.", icon: "catalog" },
+      { label: "Use cases in action", href: "/agents/use-cases", desc: "Step through live agent workflows.", icon: "play" },
+      { label: "Playground", href: "/agents/playground", desc: "Drive an agent before you deploy one.", icon: "playground" },
     ],
-    featured: { label: "Try the Playground", href: "/agents/playground" },
   },
   {
     label: "Build",
     href: "/build",
     items: [
-      { label: "SDK guide", href: "/build/sdk-guide", desc: "Zero to running agent." },
-      { label: "API reference", href: "/build/api-reference", desc: "Four gRPC services, one execution layer." },
-      { label: "Agent Space", href: "/build/agent-space", desc: "Agent types and hosting models." },
+      { label: "SDK guide", href: "/build/sdk-guide", desc: "Zero to running agent.", icon: "guide" },
+      { label: "API reference", href: "/build/api-reference", desc: "Four gRPC services, one execution layer.", icon: "code" },
+      { label: "Agent Space", href: "/build/agent-space", desc: "Agent types and hosting models.", icon: "layers" },
     ],
-    featured: { label: "5-minute quickstart", href: "/build/sdk-guide" },
   },
   {
     label: "Solutions",
     href: "/solutions",
     items: [
-      { label: "Use cases", href: "/solutions/trade", desc: "Same mechanism, many stories." },
-      { label: "Who can use Silvana", href: "/solutions/who-can-use", desc: "Built for everyone who operates assets." },
-      { label: "Case studies", href: "/solutions/case-studies", desc: "Built with the ecosystem." },
+      { label: "Use cases", href: "/solutions/trade", desc: "Same mechanism, many stories.", icon: "sparkles" },
+      { label: "Who can use Silvana", href: "/solutions/who-can-use", desc: "Built for everyone who operates assets.", icon: "users" },
+      { label: "Case studies", href: "/solutions/case-studies", desc: "Built with the ecosystem.", icon: "chart" },
     ],
-    featured: { label: "Find your fit", href: "/solutions" },
   },
 ];
 

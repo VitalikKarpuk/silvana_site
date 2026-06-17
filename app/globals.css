@@ -105,6 +105,42 @@ body {
   line-height: 1.04;
   font-weight: 700;
 }
+/* Hero-scale headline — same Whyte Bold, tighter tracking + line-height for the
+   largest display sizes (used by the home hero). line-height kept slightly above
+   1 so bg-clip-text gradients don't crop the glyph ascenders. */
+.display-tight {
+  font-family: var(--font-whyte), -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.045em;
+  line-height: 1.18;
+  font-weight: 700;
+}
+
+/* Flowing brand gradient for clipped text — magenta↔teal stops slide across,
+   so the fill shimmers. Reduced-motion (below) snaps the slide to a still frame.
+   Use on an inline-block element with bg-clip-text. */
+@keyframes text-gradient-flow {
+  to {
+    background-position: 200% center;
+  }
+}
+.text-gradient-flow {
+  /* flows inline with the headline; the parent's line-height gives the clipped
+     gradient enough box height to cover the glyph ascenders. */
+  background-image: linear-gradient(
+    110deg,
+    var(--accent) 0%,
+    var(--data) 30%,
+    var(--accent) 55%,
+    var(--data) 80%,
+    var(--accent) 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: text-gradient-flow 5s linear infinite;
+}
 
 /* Tabular figures so data columns never shift. */
 .font-mono,
@@ -146,6 +182,44 @@ body {
   animation:
     grow-up 1.55s cubic-bezier(0.3, 0, 0.7, 0) 0.15s both,
     tree-pulse 2.4s ease-in-out 1.7s infinite;
+}
+
+/* Hero icon animations: entrance from above/below + persistent float.
+   tree-grow finishes at ~1.7s, icons stagger in after that.
+   icon-float runs indefinitely with per-icon delay offsets for organic motion. */
+@keyframes icon-in-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes icon-in-down {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-7px); }
+}
+/* Hover sonar — a ring that expands out of the circle and fades, looping while
+   hovered. Color follows the element's `currentColor`, so set text-{data|accent}
+   on the circle. Reduced-motion (below) snaps the duration → ring stays invisible. */
+@keyframes icon-sonar {
+  0%   { opacity: 0.55; transform: scale(1); }
+  100% { opacity: 0;    transform: scale(1.7); }
+}
+.icon-ring {
+  position: relative;
+}
+.icon-ring::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.icon-ring:hover::after {
+  animation: icon-sonar 1.1s ease-out infinite;
 }
 
 /* Logo-wall marquee: two identical halves scroll left; -50% loops seamlessly. */
