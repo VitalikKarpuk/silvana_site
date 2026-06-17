@@ -88,8 +88,8 @@ export function Institutions() {
         className="absolute inset-0 bg-linear-to-b from-bg/90 via-bg/70 to-bg/85"
       />
 
-      <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-20 md:py-24 lg:grid-cols-2">
-        <Reveal>
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-20 md:gap-12 md:py-24 lg:grid-cols-2">
+        <Reveal className="min-w-0">
           <Eyebrow>For institutions</Eyebrow>
           <h2 className="display mt-4 text-3xl text-fg sm:text-4xl md:text-5xl">
             Trade size without showing your hand.
@@ -106,7 +106,7 @@ export function Institutions() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1}>
+        <Reveal delay={0.1} className="min-w-0">
           <div className="glass divide-y divide-line overflow-hidden rounded-3xl">
             {CASES.map((c, i) => {
               // Rows without a stat strip are plain single lines (spec).
@@ -115,11 +115,11 @@ export function Institutions() {
                   <a
                     key={c.company}
                     href="/solutions/case-studies"
-                    className="group flex cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-surface-2"
+                    className="group flex cursor-pointer flex-col items-start gap-2.5 px-5 py-4 text-left transition-colors hover:bg-surface-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                   >
                     <span className="flex min-w-0 items-center gap-3">
                       <Avatar company={c.company} />
-                      <span className="truncate text-sm text-fg">{c.line}</span>
+                      <span className="text-sm text-fg sm:truncate">{c.line}</span>
                     </span>
                     <span className="shrink-0 text-sm text-data">
                       Read the story{" "}
@@ -141,7 +141,7 @@ export function Institutions() {
                   >
                     <span className="flex min-w-0 items-center gap-3">
                       <Avatar company={c.company} />
-                      <span className="truncate text-sm text-fg">{c.line}</span>
+                      <span className="text-sm text-fg sm:truncate">{c.line}</span>
                     </span>
                     <motion.svg
                       viewBox="0 0 16 16"

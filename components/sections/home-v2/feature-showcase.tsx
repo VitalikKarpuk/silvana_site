@@ -65,9 +65,9 @@ function ProductRow({ product, index }: { product: (typeof PRODUCTS)[number]; in
   const slide = (from: number) => ({
     initial: reduce ? false : { opacity: 0, x: from },
     whileInView: { opacity: 1, x: 0 },
-    // fire only once the row is well into the viewport (shrinks the trigger
-    // zone from the bottom), so it doesn't animate while still near the edge
-    viewport: { once: true, margin: "0px 0px -35% 0px" },
+    // re-run every time the row enters the viewport (scrolling down OR back up),
+    // and only once it's well inside (shrinks the trigger zone from the bottom)
+    viewport: { once: false, margin: "0px 0px -35% 0px" },
     transition: { duration: 1.25, ease: EASE },
   });
 

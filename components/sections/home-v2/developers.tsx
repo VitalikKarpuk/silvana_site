@@ -5,7 +5,7 @@ export function Developers() {
   return (
     <Band>
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-        <div>
+        <div className="min-w-0">
           <SectionHead
             eyebrow="For developers"
             title="From strategy to running agent in an afternoon."
@@ -19,7 +19,7 @@ export function Developers() {
           </Reveal>
         </div>
 
-        <Reveal delay={0.08}>
+        <Reveal delay={0.08} className="min-w-0">
           {/* dark terminal — window chrome + highlighted output */}
           <div className="overflow-hidden rounded-2xl border border-line bg-[#0c0c12] shadow-[0_30px_60px_-30px_rgba(20,22,29,0.5)]">
             <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-2.5">

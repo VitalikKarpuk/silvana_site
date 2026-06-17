@@ -137,9 +137,6 @@ export function Blog() {
       <Reveal delay={0.1} className="mt-8 flex items-center justify-center gap-3">
         <ArrowButton dir="prev" onClick={() => scrollByCard(-1)} />
         <ArrowButton dir="next" onClick={() => scrollByCard(1)} />
-        <ArrowLink href="/blog" className="ml-1">
-          View all posts
-        </ArrowLink>
       </Reveal>
     </Band>
   );

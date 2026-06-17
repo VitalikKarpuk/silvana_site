@@ -61,9 +61,9 @@ export function LogoWall() {
           Building the agent economy with
         </div>
 
-        {/* Desktop: marquee. Edges fade out via a mask so items appear/vanish. */}
+        {/* Marquee on every viewport. Edges fade out via a mask so items appear/vanish. */}
         <div
-          className="marquee relative mt-7 hidden overflow-hidden md:block"
+          className="marquee relative mt-7 overflow-hidden"
           style={{
             WebkitMaskImage:
               "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)",
@@ -85,15 +85,6 @@ export function LogoWall() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Mobile: static two-row grid */}
-        <div className="mt-7 grid grid-cols-2 items-center gap-x-8 gap-y-6 md:hidden">
-          {[...PARTNERS, ...PARTNERS].map((p, i) => (
-            <div key={i} className="flex justify-center">
-              <Item p={p} />
-            </div>
-          ))}
         </div>
       </div>
     </section>

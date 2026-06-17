@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { NAV_GROUPS, NAV_STANDALONE } from "@/lib/nav";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/logo";
@@ -21,8 +21,6 @@ export function Nav() {
   const [open, setOpen] = useState<string | null>(null);
   const [mobile, setMobile] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -139,13 +137,6 @@ export function Nav() {
           </button>
         </div>
       </nav>
-
-      {/* reading progress */}
-      <motion.div
-        aria-hidden
-        className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-accent"
-        style={{ scaleX: progress }}
-      />
 
       {/* Mobile menu */}
       <AnimatePresence>

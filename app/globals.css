@@ -67,6 +67,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* Guard against any element bleeding past the viewport width (a common cause
+     of pages opening scrolled sideways on mobile). `clip` — not `hidden` — so
+     it doesn't create a scroll container and the sticky nav keeps working. */
+  overflow-x: clip;
 }
 
 body {
