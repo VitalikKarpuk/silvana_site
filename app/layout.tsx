@@ -41,7 +41,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      {/* suppressHydrationWarning: browser extensions (e.g. ColorZilla adds
+          `cz-shortcut-listen`) mutate <body> before React hydrates. */}
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <div className="ambient" aria-hidden />
         <Nav />
         <main className="flex-1">{children}</main>
