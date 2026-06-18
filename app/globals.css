@@ -226,6 +226,42 @@ body {
   animation: icon-sonar 1.1s ease-out infinite;
 }
 
+/* 3D axial spin for the hero ecosystem nodes — the ring rotates around its
+   vertical axis like a coin. The perspective that gives it depth is set on the
+   node wrapper. Reduced-motion (below) snaps the duration so it stays still. */
+@keyframes icon-spin-y {
+  to { transform: rotateY(360deg); }
+}
+.icon-spin-y {
+  animation: icon-spin-y 7s linear infinite;
+}
+
+/* 3D orbit: the central Silvana mark revolves around the tree trunk in space —
+   a horizontal ring (rotateY) tilted toward the viewer, so the chip sweeps in
+   front of the trunk and back behind it (depth). The arm spins around the
+   vertical axis; an equal counter-spin keeps the chip billboarded (facing the
+   camera). A synced opacity fade dims it on the far half so it reads as passing
+   behind the tree. */
+@keyframes tree-orbit-y {
+  to { transform: rotateY(360deg); }
+}
+@keyframes tree-orbit-y-rev {
+  to { transform: rotateY(-360deg); }
+}
+@keyframes tree-orbit-depth {
+  0%, 100% { opacity: 1; }   /* front — nearest the viewer */
+  50%      { opacity: 0.35; } /* back — behind the trunk */
+}
+.tree-orbit-y {
+  animation: tree-orbit-y 18s linear infinite;
+}
+.tree-orbit-y-rev {
+  animation: tree-orbit-y-rev 18s linear infinite;
+}
+.tree-orbit-depth {
+  animation: tree-orbit-depth 18s linear infinite;
+}
+
 /* Logo-wall marquee: two identical halves scroll left; -50% loops seamlessly. */
 @keyframes marquee-x {
   from {

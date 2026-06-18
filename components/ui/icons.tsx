@@ -23,29 +23,18 @@ export function WalletsIcon({ size = 24, ...props }: Props) {
   );
 }
 
-// Canton — from order-book onboarding/canton-wallet.svg (cube = Canton blockchain node)
+// Canton — the Canton Coin (CC) token mark, recoloured into our turquoise
+// palette (public/tokens/cc-teal.svg). Embedded via <image>; the two-tone
+// teal is baked into the asset, so it does not follow currentColor.
 export function CantonIcon({ size = 24, ...props }: Props) {
   return (
-    <svg
-      viewBox="0 0 32 32"
-      width={size}
-      height={size}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinejoin="round"
-      aria-hidden
-      {...props}
-    >
-      <path d="M16 8L8 12V20L16 24L24 20V12L16 8Z" />
-      <path d="M16 8V24" />
-      <path d="M8 12L24 20" />
-      <path d="M24 12L8 20" />
+    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden {...props}>
+      <image href="/tokens/cc-teal.svg" x="0" y="0" width="24" height="24" />
     </svg>
   );
 }
 
-// Data Feeds — three ascending bars (activity / stream).
+// Data Feeds — a stack of data (database cylinder of stacked layers).
 export function DataFeedsIcon({ size = 24, ...props }: Props) {
   return (
     <svg
@@ -60,18 +49,19 @@ export function DataFeedsIcon({ size = 24, ...props }: Props) {
       aria-hidden
       {...props}
     >
-      <rect x="2" y="13" width="5" height="9" rx="1.5" />
-      <rect x="9.5" y="7" width="5" height="15" rx="1.5" />
-      <rect x="17" y="2" width="5" height="20" rx="1.5" />
+      <ellipse cx="12" cy="5" rx="7.5" ry="2.5" />
+      <path d="M4.5 5v14c0 1.38 3.36 2.5 7.5 2.5s7.5-1.12 7.5-2.5V5" />
+      <path d="M4.5 9.7c0 1.38 3.36 2.5 7.5 2.5s7.5-1.12 7.5-2.5" />
+      <path d="M4.5 14.3c0 1.38 3.36 2.5 7.5 2.5s7.5-1.12 7.5-2.5" />
     </svg>
   );
 }
 
-// Market Making — from order-book exchange.svg (two-directional bid/ask arrows).
+// Market Making — growing columns with a rising trend arrow (market growth).
 export function MarketMakingIcon({ size = 24, ...props }: Props) {
   return (
     <svg
-      viewBox="0 0 20 20"
+      viewBox="0 0 24 24"
       width={size}
       height={size}
       fill="none"
@@ -82,19 +72,21 @@ export function MarketMakingIcon({ size = 24, ...props }: Props) {
       aria-hidden
       {...props}
     >
-      <path d="M7.50755 17.0832L3.32422 12.9082" />
-      <path d="M7.50781 2.91602V17.0827" />
-      <path d="M12.4922 2.91602L16.6755 7.09102" />
-      <path d="M12.4922 17.0827V2.91602" />
+      <path d="M3.5 21h17" />
+      <rect x="5" y="14" width="3.4" height="7" rx="1" />
+      <rect x="10.3" y="10.5" width="3.4" height="10.5" rx="1" />
+      <rect x="15.6" y="6.5" width="3.4" height="14.5" rx="1" />
+      <path d="M5 12l5-3.5 3.5 1.5 6.5-6" />
+      <path d="M16.5 3.5H20v3.5" />
     </svg>
   );
 }
 
-// Grid — from order-book settings/preferences.svg (3-level sliders = grid trading levels).
+// Grid — a 2×2 grid of cells (grid-trading price levels).
 export function GridIcon({ size = 24, ...props }: Props) {
   return (
     <svg
-      viewBox="8 8 20 20"
+      viewBox="0 0 24 24"
       width={size}
       height={size}
       fill="none"
@@ -105,20 +97,15 @@ export function GridIcon({ size = 24, ...props }: Props) {
       aria-hidden
       {...props}
     >
-      <path d="M18 12.9987C18 13.4407 18.1756 13.8646 18.4882 14.1772C18.8007 14.4898 19.2246 14.6654 19.6667 14.6654C20.1087 14.6654 20.5326 14.4898 20.8452 14.1772C21.1577 13.8646 21.3333 13.4407 21.3333 12.9987C21.3333 12.5567 21.1577 12.1327 20.8452 11.8202C20.5326 11.5076 20.1087 11.332 19.6667 11.332C19.2246 11.332 18.8007 11.5076 18.4882 11.8202C18.1756 12.1327 18 12.5567 18 12.9987Z" />
-      <path d="M11.3359 13H18.0026" />
-      <path d="M21.3359 13H24.6693" />
-      <path d="M13 17.9987C13 18.4407 13.1756 18.8646 13.4882 19.1772C13.8007 19.4898 14.2246 19.6654 14.6667 19.6654C15.1087 19.6654 15.5326 19.4898 15.8452 19.1772C16.1577 18.8646 16.3333 18.4407 16.3333 17.9987C16.3333 17.5567 16.1577 17.1327 15.8452 16.8202C15.5326 16.5076 15.1087 16.332 14.6667 16.332C14.2246 16.332 13.8007 16.5076 13.4882 16.8202C13.1756 17.1327 13 17.5567 13 17.9987Z" />
-      <path d="M11.3359 18H13.0026" />
-      <path d="M16.3359 18H24.6693" />
-      <path d="M20.5 22.9987C20.5 23.4407 20.6756 23.8646 20.9882 24.1772C21.3007 24.4898 21.7246 24.6654 22.1667 24.6654C22.6087 24.6654 23.0326 24.4898 23.3452 24.1772C23.6577 23.8646 23.8333 23.4407 23.8333 22.9987C23.8333 22.5567 23.6577 22.1327 23.3452 21.8202C23.0326 21.5076 22.6087 21.332 22.1667 21.332C21.7246 21.332 21.3007 21.5076 20.9882 21.8202C20.6756 22.1327 20.5 22.5567 20.5 22.9987Z" />
-      <path d="M11.3359 23H20.5026" />
-      <path d="M23.8359 23H24.6693" />
+      <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+      <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+      <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+      <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
     </svg>
   );
 }
 
-// Taker — single directional strike arrow.
+// Taker — a single person figure (the trader taking liquidity).
 export function TakerIcon({ size = 24, ...props }: Props) {
   return (
     <svg
@@ -133,9 +120,8 @@ export function TakerIcon({ size = 24, ...props }: Props) {
       aria-hidden
       {...props}
     >
-      <path d="M5 12h14" />
-      <path d="M13 6l6 6-6 6" />
-      <path d="M5 6v12" />
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M5.5 20.5a6.5 6.5 0 0 1 13 0" />
     </svg>
   );
 }

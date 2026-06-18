@@ -22,24 +22,103 @@ const HERO_ICONS = [
   { Icon: DataFeedsIcon, label: "Data Feeds", left: "82%", bottom: "-5%" },
 ] as const;
 
-function HeroIcons() {
+// A real 3D coin: two icon faces (front + back, backface-hidden) plus a
+// cylindrical rim built from flat panels. The rim's cylinder is tipped onto the
+// Z axis (rotateX 90°) so that, as the coin spins around Y, its edge (thickness)
+// rotates into view at the quarter turns — you actually see the side of the
+// coin. Perspective comes from the wrapper (each node sets it inline).
+const COIN_SEG = 14; // rim panels — more = rounder edge
+const COIN_R = 24; // radius (h-12 = 48px)
+const COIN_THICK = 8; // edge thickness in px
+
+function CoinNode({
+  Icon,
+  border,
+  glyph,
+  rim,
+  delay,
+}: {
+  Icon: (props: { size?: number; className?: string }) => ReactNode;
+  border: string;
+  glyph: string;
+  rim: string;
+  delay: string;
+}) {
+  const face = `absolute inset-0 flex items-center justify-center rounded-full border bg-bg ${border} ${glyph}`;
+  const segW = Math.ceil((2 * Math.PI * COIN_R) / COIN_SEG) + 2;
+  return (
+    <div
+      className="icon-spin-y relative h-12 w-12"
+      style={{ transformStyle: "preserve-3d", animationDelay: delay }}
+    >
+      {/* front + back faces, offset by half the thickness */}
+      <div
+        className={face}
+        style={{ transform: `translateZ(${COIN_THICK / 2}px)`, backfaceVisibility: "hidden" }}
+      >
+        <Icon size={28} className={glyph} />
+      </div>
+      <div
+        className={face}
+        style={{
+          transform: `rotateY(180deg) translateZ(${COIN_THICK / 2}px)`,
+          backfaceVisibility: "hidden",
+        }}
+      >
+        <Icon size={28} className={glyph} />
+      </div>
+      {/* rim — a ring of panels; rotateX(90°) tips its axis so the edge shows mid-spin */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{ transformStyle: "preserve-3d", transform: "rotateX(90deg)" }}
+      >
+        {Array.from({ length: COIN_SEG }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute left-1/2 top-1/2 rounded-[1px]"
+            style={{
+              width: segW,
+              height: COIN_THICK,
+              marginLeft: -segW / 2,
+              marginTop: -COIN_THICK / 2,
+              transform: `rotateY(${(i * 360) / COIN_SEG}deg) translateZ(${COIN_R}px)`,
+              background: rim,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HeroIcons({ dark }: { dark?: boolean }) {
+  // Dark theme renders a larger tree → nudge the bottom icons up to hug it,
+  // and slightly right to follow the shifted trunk.
+  const dy = dark ? 7 : 0;
+  const dx = dark ? 1 : 0;
   return (
     <>
       {HERO_ICONS.map(({ Icon, label, left, bottom }, i) => (
         <div
           key={label}
           className="absolute -translate-x-1/2"
-          style={{ left, bottom }}
+          style={{ left: `calc(${left} + ${dx}%)`, bottom: `calc(${bottom} + ${dy}%)` }}
         >
           <div
             className="flex flex-col items-center gap-2.5"
             style={{
+              perspective: "700px",
               animation: `icon-in-up 0.6s cubic-bezier(0.16,1,0.3,1) ${1.65 + i * 0.14}s both, icon-float ${3.4 + i * 0.4}s ease-in-out ${2.35 + i * 0.14}s infinite`,
             }}
           >
-            <div className="icon-ring flex h-12 w-12 items-center justify-center rounded-full border border-[#1cc5bd]/55 bg-bg text-[#1cc5bd] shadow-[0_4px_16px_rgba(0,0,0,0.15)] backdrop-blur-md transition-shadow duration-300 hover:shadow-[0_6px_28px_rgba(28,197,189,0.35)]">
-              <Icon size={28} className="text-[#1cc5bd]" />
-            </div>
+            <CoinNode
+              Icon={Icon}
+              border="border-[#1cc5bd]/55"
+              glyph="text-[#1cc5bd]"
+              rim="rgba(28,197,189,0.5)"
+              delay={`${i * -2.2}s`}
+            />
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-muted drop-shadow-sm lg:block">
               {label}
             </span>
@@ -58,27 +137,36 @@ const BRANCH_ICONS = [
   { Icon: ProvingIcon,      label: "Proving",       left: "80%", top: "5%" },
 ] as const;
 
-function HeroBranchIcons() {
+function HeroBranchIcons({ dark }: { dark?: boolean }) {
+  // Dark theme renders a larger tree → nudge the top icons down to hug it,
+  // and slightly right to follow the shifted trunk.
+  const dy = dark ? 7 : 0;
+  const dx = dark ? 1 : 0;
   return (
     <>
       {BRANCH_ICONS.map(({ Icon, label, left, top }, i) => (
         <div
           key={label}
           className="absolute -translate-x-1/2"
-          style={{ left, top }}
+          style={{ left: `calc(${left} + ${dx}%)`, top: `calc(${top} + ${dy}%)` }}
         >
           <div
             className="flex flex-col items-center gap-2.5"
             style={{
+              perspective: "700px",
               animation: `icon-in-down 0.6s cubic-bezier(0.16,1,0.3,1) ${1.65 + i * 0.12}s both, icon-float ${3.1 + i * 0.3}s ease-in-out ${2.35 + i * 0.12}s infinite`,
             }}
           >
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-muted drop-shadow-sm lg:block">
               {label}
             </span>
-            <div className="icon-ring flex h-12 w-12 items-center justify-center rounded-full border border-accent/40 bg-bg text-accent shadow-[0_4px_16px_rgba(0,0,0,0.15)] backdrop-blur-md transition-shadow duration-300 hover:shadow-[0_6px_28px_rgba(214,68,143,0.35)]">
-              <Icon size={28} className="text-accent/80" />
-            </div>
+            <CoinNode
+              Icon={Icon}
+              border="border-accent/40"
+              glyph="text-accent/80"
+              rim="color-mix(in srgb, var(--accent) 50%, transparent)"
+              delay={`${i * -1.6}s`}
+            />
           </div>
         </div>
       ))}
@@ -93,7 +181,7 @@ function HeroBranchIcons() {
 // every node (positioned in % of this box) scales with it as one unit. The box
 // never dictates the banner height — it just fills the visual column / stacks
 // under the copy on mobile.
-function Diagram({ imgBlend }: { imgBlend: string }) {
+function Diagram({ imgBlend, src, dark }: { imgBlend: string; src: string; dark?: boolean }) {
   return (
     // The image is `block w-full`, so its intrinsic (near-square) aspect ratio
     // drives this box's height. No crop — the tree is full-bleed (branches and
@@ -101,7 +189,7 @@ function Diagram({ imgBlend }: { imgBlend: string }) {
     // nodes are positioned in % of this box and scale with it as one unit.
     <div className="relative w-full">
       <Image
-        src="/tree_light1.png"
+        src={src}
         alt="The Silvana platform: ecosystems — Wallets, Canton, and data feeds — feed into Silvana, which branches into autonomous agents for market making, grid, taker, settlement, and proving."
         width={822}
         height={826}
@@ -110,16 +198,45 @@ function Diagram({ imgBlend }: { imgBlend: string }) {
         className={`block w-full ${imgBlend}`}
       />
 
-      <HeroIcons />
-      <HeroBranchIcons />
+      <HeroIcons dark={dark} />
+      <HeroBranchIcons dark={dark} />
 
-      {/* Silvana mark on the trunk (centre of the diagram) */}
+      {/* Silvana mark — a frosted glass chip that ORBITS the tree trunk in 3D.
+          Pivot (zero-size) at the trunk centre carries a flat horizontal ring
+          (no tilt): orbit (rotateY) → push out (translateZ) → chip. The disc
+          stays strictly VERTICAL and turns with the orbit so its face points at
+          the trunk (coin-like). Dark theme's larger tree shifts the trunk → right. */}
       <div
         aria-hidden
-        className="absolute left-[48.8%] top-1/2 -translate-x-1/2 -translate-y-1/2"
+        className={`absolute top-1/2 h-0 w-0 ${dark ? "left-[49.8%]" : "left-[48.8%]"}`}
+        style={{ perspective: "620px" }}
       >
-        <div className="icon-ring flex h-20 w-20 items-center justify-center rounded-full border border-accent/40 bg-bg text-accent shadow-[0_4px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-shadow duration-300 hover:shadow-[0_8px_36px_rgba(214,68,143,0.4)]">
-          <LogoMark className="h-11 w-11" />
+        <div
+          className="tree-orbit-y absolute h-0 w-0"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          {/* No billboard: the disc turns WITH the orbit, so its face always
+              points at the trunk. Double-faced + backface hidden so the mark
+              reads correctly on whichever side faces us. */}
+          <div style={{ transform: "translateZ(78px)", transformStyle: "preserve-3d" }}>
+            <div
+              className="tree-orbit-depth relative h-20 w-20"
+              style={{ transform: "translate(-50%, -50%)", transformStyle: "preserve-3d" }}
+            >
+              <div
+                className="absolute inset-0 flex items-center justify-center rounded-full border border-white/25 bg-white/10 text-accent shadow-[0_4px_24px_rgba(0,0,0,0.12)] ring-1 ring-white/10 backdrop-blur-md"
+                style={{ backfaceVisibility: "hidden" }}
+              >
+                <LogoMark className="h-11 w-11" />
+              </div>
+              <div
+                className="absolute inset-0 flex items-center justify-center rounded-full border border-white/25 bg-white/10 text-accent shadow-[0_4px_24px_rgba(0,0,0,0.12)] ring-1 ring-white/10 backdrop-blur-md"
+                style={{ transform: "rotateY(180deg)", backfaceVisibility: "hidden" }}
+              >
+                <LogoMark className="h-11 w-11" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -142,6 +259,10 @@ const SCRIM =
 // except for how the diagram blends into the background.
 function Banner({ dark, content }: { dark?: boolean; content: ReactNode }) {
   const imgBlend = dark ? "opacity-60 mix-blend-screen" : "mix-blend-multiply";
+  const src = dark ? "/tree_light4.png" : "/tree_light1.png";
+  // Dark theme renders a larger tree.
+  const smW = dark ? "w-160" : "w-136";
+  const lgW = dark ? "w-[66%]" : "w-[56%]";
   return (
     <section
       className={`relative overflow-x-clip border-b border-line ${dark ? "hidden dark:block" : "dark:hidden"}`}
@@ -149,15 +270,15 @@ function Banner({ dark, content }: { dark?: boolean; content: ReactNode }) {
       {/* sm → <lg : fixed-size diagram pinned to the right edge. Its size does
           not change across this range; it's free to bleed past the top/bottom
           of the banner (section clips only the x-axis, so the y-overflow shows). */}
-      <div className="pointer-events-none absolute right-0 top-1/2 hidden w-136 -translate-y-1/2 sm:block lg:hidden">
-        <Diagram imgBlend={imgBlend} />
+      <div className={`pointer-events-none absolute right-0 top-1/2 hidden ${smW} -translate-y-1/2 sm:block lg:hidden`}>
+        <Diagram imgBlend={imgBlend} src={src} dark={dark} />
       </div>
 
       {/* lg+ : responsive right-side background within the content container */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
         <div className="relative mx-auto h-full max-w-7xl px-6">
-          <div className="absolute right-6 top-1/2 w-[56%] -translate-y-1/2">
-            <Diagram imgBlend={imgBlend} />
+          <div className={`absolute right-6 top-1/2 ${lgW} -translate-y-1/2`}>
+            <Diagram imgBlend={imgBlend} src={src} dark={dark} />
           </div>
         </div>
       </div>
